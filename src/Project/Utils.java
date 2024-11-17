@@ -25,6 +25,7 @@ public class Utils {
     }
 
 
+    //CHEQUEARRRRRR
     public static boolean convienePlantarlo(Cultivo cultivo, double gananciaActual, double[][] riesgos, Coordenada izqArriba, Coordenada derechaAbajo) {
         double ganancia = 0;
 
@@ -61,9 +62,6 @@ public class Utils {
                     maxFila = Math.max(maxFila, contadorFila); // Actualizar longitud máxima de fila continua
                 } else {
                     contadorFila = 0; // Reiniciar si encontramos un cultivo diferente
-                }
-                if (maxFila > 6) { // Poda: Si supera 6 en fila, retorna falso
-                    return false;
                 }
             }
         }
@@ -179,24 +177,22 @@ public class Utils {
         }
     }
 
+    //chequear
     public static double calcularMontoInvertido(Cultivo cultivo, Coordenada arribaIzq, Coordenada abajoDerecha) {
-        int numeroParcelas = (abajoDerecha.getX() - arribaIzq.getX() + 1) *
-                (abajoDerecha.getY() - arribaIzq.getY() + 1);
+        int numeroParcelas = (abajoDerecha.getX() + 1 - arribaIzq.getX()) * (abajoDerecha.getY() + 1 - arribaIzq.getY());
         return (cultivo.getCostoPorParcela() * numeroParcelas) + cultivo.getInversionRequerida();
     }
 
-    public static double calcularRiesgoPromedio(Coordenada arribaIzq, Coordenada abajoDerecha, double[][] riesgos) {
+    public static int RiesgoAsociado(Coordenada arribaIzq, Coordenada abajoDerecha, double[][] riesgos) {
         double sumaRiesgos = 0;
-        int numeroParcelas = 0;
 
         for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
             for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
                 sumaRiesgos += riesgos[i][j];
-                numeroParcelas++;
             }
         }
 
-        return sumaRiesgos / numeroParcelas;
+        return (int) sumaRiesgos * 100; //PREGUNTARRRRR A NICOOOOOOO
     }
 
 }
