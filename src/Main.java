@@ -83,9 +83,9 @@ public class Main {
                 riesgos[i][j] = (i + j) / 200.0;
             }
         }
-        double ganancia = planificador.obtenerGanancia(cultivos, riesgos, "Verano");
-        System.out.println(ganancia);
-    }
+        List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Otoño");
+        System.out.println("Resultado: " +  cultivoSeleccionados);
+     }
 
     private static void imprimirMatrizDeRiesgos(double[][] riesgos) {
         for (int i = 0; i < 100; i++) {
