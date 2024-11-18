@@ -17,7 +17,8 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
     public List<CultivoSeleccionado> obtenerPlanificacion(List<Cultivo> cultivosDisponibles, double[][] riesgos, String temporada) {
 
         //filtramos por temporada
-        for (Cultivo cultivo: cultivosDisponibles) {
+        for (int i = 0; i < cultivosDisponibles.size(); i++) {
+            Cultivo cultivo = cultivosDisponibles.get(i);
             if (!cultivo.getTemporadaOptima().equals(temporada)) {
                 cultivosDisponibles.remove(cultivo);
             }
@@ -41,6 +42,7 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             double gananciaAnterior,
             int indiceCultivo, //nivel
             Cultivo cultivoRepetible,
+            Cultivo [][] matrizCultivos,
             Set<Cultivo> cultivoSet) {
 
         // Si llegamos al final, guardamos la configuración si es la mejor hasta ahora
@@ -70,6 +72,9 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                                         abajoDerecha, calcularMontoInvertido(cultivoActual, arribaIzq, abajoDerecha),
                                         RiesgoAsociado(arribaIzq, abajoDerecha, riesgos),
                                         calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos)));
+
+                                //marcar la matriz de cultivos
+                                marcarMatrizCultivos(cultivoActual,arribaIzq,abajoDerecha,matrizCultivos);
 
                                 cultivoSet.add(cultivoActual);
                                 double nuevaGanancia = gananciaAnterior + calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos);
