@@ -86,6 +86,36 @@ public class Utils {
         return (maxFila + maxColumna) <= 11;
     }
 
+
+    private boolean areaLibre(Coordenada arribaIzq, Coordenada abajoDerecha, Cultivo[][] cultivos) {
+        for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
+            for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
+                if (cultivos[i][j] != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean
+
+
+
+
+    public static void marcarMatrizCultivos(Cultivo cultivo, Coordenada arribaIzq, Coordenada abajoDerecha, Cultivo[][] cultivos) {
+        for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
+            for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
+                cultivos[i][j] = cultivo;
+            }
+        }
+    }
+
+
+
+
+
+
     public static double obtenerPotencialDeCadaParcela (double riesgo, double costo, double precioVenta) {
         return ( 1 - riesgo ) * ( precioVenta - costo );
     }
