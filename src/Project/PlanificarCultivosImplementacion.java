@@ -288,9 +288,19 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         }
     }
 
+
+    private int contarCasilleros () {
+        int [][] matriz = new int[10][10];
+        Coordenada arribaIzq = new Coordenada(0,0);
+        Coordenada abajoDerecha = new Coordenada(4,4);
+        int numeroParcelas = (abajoDerecha.getX() - arribaIzq.getX()) *
+                (abajoDerecha.getY() - arribaIzq.getY());
+
+    }
+
     private double calcularMontoInvertido(Cultivo cultivo, Coordenada arribaIzq, Coordenada abajoDerecha) {
         int numeroParcelas = (abajoDerecha.getX() - arribaIzq.getX() + 1) *
-                (abajoDerecha.getY() - arribaIzq.getY() + 1);
+                (abajoDerecha.getY() +1 - arribaIzq.getY());
         return (cultivo.getCostoPorParcela() * numeroParcelas) + cultivo.getInversionRequerida();
     }
 
