@@ -5,6 +5,7 @@ import Lib.Cultivo;
 import Lib.CultivoSeleccionado;
 import Lib.PlanificarCultivos;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,13 +16,8 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
     @Override
     public List<CultivoSeleccionado> obtenerPlanificacion(List<Cultivo> cultivosDisponibles, double[][] riesgos, String temporada) {
 
-        //filtramos por temporada
-        for (int i = 0; i < cultivosDisponibles.size(); i++) {
-            Cultivo cultivo = cultivosDisponibles.get(i);
-            if (!cultivo.getTemporadaOptima().equals(temporada)) {
-                cultivosDisponibles.remove(cultivo);
-            }
-        }
+        cultivosDisponibles.removeIf(cultivo -> !cultivo.getTemporadaOptima().equals(temporada));
+
         double mejorGananciaGlobal = Double.NEGATIVE_INFINITY;
         double gananciaParcial = 0;
         List <CultivoSeleccionado> cultivoSeleccionados = new ArrayList<>();
@@ -32,8 +28,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         System.out.println(resultado);
         return cultivoSeleccionados;
     }
-
-
 
     private List<CultivoSeleccionado> backtracking(
             List<Cultivo> cultivosDisponibles,
@@ -46,15 +40,16 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             Set<Cultivo> cultivoSet) {
 
         // Si llegamos al final, guardamos la configuración si es la mejor hasta ahora
-        if (indiceCultivo >= cultivosDisponibles.size()) {
+        if (indiceCultivo >= cultivosDisponibles.size()-1) {
             if (gananciaParcial > mejorGanancia) {
                 mejorGanancia = gananciaParcial;
-                //guardarMejorConfiguracion(riesgos, matrizCultivos, cultivoSeleccionados);
+                return new ArrayList<>(cultivoSeleccionados); // Guardar la mejor configuración
             }
-            return cultivoSeleccionados;  // Retornamos la configuración con la mejor ganancia
+            return cultivoSeleccionados; // Retornamos la configuración actual
         }
 
         Cultivo cultivoActual = cultivosDisponibles.get(indiceCultivo);
+        List<CultivoSeleccionado> mejorSeleccion = new ArrayList<>(cultivoSeleccionados); // Copia la configuración actual
 
         for (int i = 0; i < riesgos.length; i++) {
             for (int j = 0; j < riesgos[i].length; j++) {
@@ -68,30 +63,35 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                             if (Utils.esAreaValida(arribaIzq, abajoDerecha, matrizCultivos, cultivoActual)) {
 
                                 // Se agrega el cultivo a la lista de cultivos seleccionados
-                                CultivoSeleccionado cultivoSeleccionado = new CultivoSeleccionado(cultivoActual.getNombre(), arribaIzq,
-                                        abajoDerecha, calcularMontoInvertido(cultivoActual, arribaIzq, abajoDerecha),
+                                CultivoSeleccionado cultivoSeleccionado = new CultivoSeleccionado(
+                                        cultivoActual.getNombre(), arribaIzq, abajoDerecha,
+                                        calcularMontoInvertido(cultivoActual, arribaIzq, abajoDerecha),
                                         RiesgoAsociado(arribaIzq, abajoDerecha, riesgos),
-                                        calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos));
+                                        calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos)
+                                );
                                 cultivoSeleccionados.add(cultivoSeleccionado);
+
                                 // Marcar la matriz de cultivos
-                                marcarMatrizCultivos(cultivoActual, arribaIzq, abajoDerecha, matrizCultivos);
-                                System.out.println("Cultivo seleccionado: " + cultivoSeleccionado);
-                                System.out.println(gananciaParcial);
-                                cultivoSet.add(cultivoActual);
+                                Utils.marcarMatrizCultivos(cultivoActual, arribaIzq, abajoDerecha, matrizCultivos);
 
                                 // Llamada recursiva con la nueva ganancia
                                 double nuevaGanancia = gananciaParcial + calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos);
-                                List<CultivoSeleccionado> resultadoRecursivo = backtracking(cultivosDisponibles, cultivoSeleccionados, riesgos, nuevaGanancia, mejorGanancia, indiceCultivo + 1, matrizCultivos, cultivoSet);
+                                List<CultivoSeleccionado> resultadoRecursivo = backtracking(
+                                        cultivosDisponibles, cultivoSeleccionados, riesgos,
+                                        nuevaGanancia, mejorGanancia, indiceCultivo + 1,
+                                        matrizCultivos, cultivoSet
+                                );
 
-                                // Si el resultado recursivo tiene una mejor ganancia, actualizamos
-                                if (calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos) > mejorGanancia) {
-                                    cultivoSeleccionados = resultadoRecursivo;  // Asignamos el mejor resultado
+                                // Actualizamos el mejor resultado si es necesario
+                                if (nuevaGanancia > mejorGanancia) {
+                                    mejorGanancia = nuevaGanancia;
+                                    System.out.println(mejorGanancia);
+                                    mejorSeleccion = resultadoRecursivo;
                                 }
-
+                                System.out.println(cultivoActual.getNombre() + " " + nuevaGanancia);
                                 // Retroceder: desmarcar matriz y remover el cultivo
                                 Utils.desmarcarMatrizCultivos(arribaIzq, abajoDerecha, matrizCultivos);
                                 cultivoSeleccionados.remove(cultivoSeleccionado);
-                                cultivoSet.remove(cultivoActual);
                             }
                         }
                     }
@@ -99,7 +99,16 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             }
         }
 
-        return cultivoSeleccionados;  // Retorna la mejor selección de cultivos
-    }
+        // Intentamos avanzar al siguiente cultivo aunque no se haya colocado el actual
+        List<CultivoSeleccionado> resultadoSinColocar = backtracking(
+                cultivosDisponibles, cultivoSeleccionados, riesgos,
+                gananciaParcial, mejorGanancia, indiceCultivo + 1,
+                matrizCultivos, cultivoSet
+        );
+
+        // Si la configuración sin el cultivo actual es mejor, usamos esa
+        return resultadoSinColocar.size() > mejorSeleccion.size() ? resultadoSinColocar : mejorSeleccion;
+
+}
 
 }
