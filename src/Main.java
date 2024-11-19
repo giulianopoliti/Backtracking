@@ -77,14 +77,14 @@ public class Main {
         cultivos.add(cultivo);
 
 
-        double[][] riesgos = new double[25][25];
-        for (int i = 0; i < 25; i++) {
-            for (int j = 0; j < 25; j++) {
+        double[][] riesgos = new double[12][12];
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
                 riesgos[i][j] = (i + j) / 200.0;
             }
         }
         List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Otoño");
-        System.out.println("Resultado: " +  cultivoSeleccionados);
+        imprimirResultado(cultivoSeleccionados);
      }
 
     private static void imprimirMatrizDeRiesgos(double[][] riesgos) {
