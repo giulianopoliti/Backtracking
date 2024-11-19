@@ -77,9 +77,9 @@ public class Main {
         cultivos.add(cultivo);
 
 
-        double[][] riesgos = new double[100][100];
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
+        double[][] riesgos = new double[25][25];
+        for (int i = 0; i < 25; i++) {
+            for (int j = 0; j < 25; j++) {
                 riesgos[i][j] = (i + j) / 200.0;
             }
         }

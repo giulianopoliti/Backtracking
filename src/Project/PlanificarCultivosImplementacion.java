@@ -28,7 +28,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         System.out.println(resultado);
         return cultivoSeleccionados;
     }
-
     private List<CultivoSeleccionado> backtracking(
             List<Cultivo> cultivosDisponibles,
             List<CultivoSeleccionado> cultivoSeleccionados,
@@ -40,13 +39,14 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             Set<Cultivo> cultivoSet) {
 
         // Si llegamos al final, guardamos la configuración si es la mejor hasta ahora
-        if (indiceCultivo >= cultivosDisponibles.size()-1) {
+        if (indiceCultivo >= cultivosDisponibles.size()) {
             if (gananciaParcial > mejorGanancia) {
                 mejorGanancia = gananciaParcial;
-                return new ArrayList<>(cultivoSeleccionados); // Guardar la mejor configuración
+                return new ArrayList<>(cultivoSeleccionados);
             }
-            return cultivoSeleccionados; // Retornamos la configuración actual
+            return cultivoSeleccionados;
         }
+
 
         Cultivo cultivoActual = cultivosDisponibles.get(indiceCultivo);
         List<CultivoSeleccionado> mejorSeleccion = new ArrayList<>(cultivoSeleccionados); // Copia la configuración actual
@@ -76,6 +76,7 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
 
                                 // Llamada recursiva con la nueva ganancia
                                 double nuevaGanancia = gananciaParcial + calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos);
+                                System.out.println(nuevaGanancia);
                                 List<CultivoSeleccionado> resultadoRecursivo = backtracking(
                                         cultivosDisponibles, cultivoSeleccionados, riesgos,
                                         nuevaGanancia, mejorGanancia, indiceCultivo + 1,
@@ -85,10 +86,9 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                                 // Actualizamos el mejor resultado si es necesario
                                 if (nuevaGanancia > mejorGanancia) {
                                     mejorGanancia = nuevaGanancia;
-                                    System.out.println(mejorGanancia);
                                     mejorSeleccion = resultadoRecursivo;
                                 }
-                                System.out.println(cultivoActual.getNombre() + " " + nuevaGanancia);
+
                                 // Retroceder: desmarcar matriz y remover el cultivo
                                 Utils.desmarcarMatrizCultivos(arribaIzq, abajoDerecha, matrizCultivos);
                                 cultivoSeleccionados.remove(cultivoSeleccionado);
@@ -108,7 +108,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
 
         // Si la configuración sin el cultivo actual es mejor, usamos esa
         return resultadoSinColocar.size() > mejorSeleccion.size() ? resultadoSinColocar : mejorSeleccion;
-
-}
+    }
 
 }
