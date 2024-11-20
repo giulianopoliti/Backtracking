@@ -44,15 +44,9 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             String[][] matrizCultivos,
             Set<Cultivo> cultivoSet) {
 
-        // Paso 1: Verificar poda
-        // Si la ganancia parcial ya es menor que la mejor ganancia global, no seguimos con esta rama.
-        if (gananciaParcial < mejorGanancia) {
-            System.out.println("Poda: La ganancia parcial es menor que la mejor ganancia global. Saliendo de la rama.");
-            return cultivoSeleccionados;
-        }
 
         // Si llegamos al final, actualizamos la ganancia global si es necesario
-        if (indiceCultivo >= cultivosDisponibles.size()) {
+        if (indiceCultivo >= cultivosDisponibles.size()-1) {
             if (gananciaParcial > mejorGanancia) {
                 mejorGanancia = gananciaParcial;  // Actualizar mejor ganancia
                 System.out.println("Mejor ganancia actualizada a: " + mejorGanancia);
