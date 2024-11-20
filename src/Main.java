@@ -83,7 +83,7 @@ public class Main {
                 riesgos[i][j] = (i + j) / 200.0;
             }
         }
-        List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Otoño");
+        List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Invierno");
         imprimirResultado(cultivoSeleccionados);
      }
 

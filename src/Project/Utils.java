@@ -3,6 +3,8 @@ package Project;
 import Lib.Coordenada;
 import Lib.Cultivo;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 public class Utils {
@@ -59,6 +61,74 @@ public class Utils {
         }
         return true;
     }
+
+
+    public static boolean sePuedePlantar(Coordenada arribaIzq, Coordenada abajoDerecha, String[][] matrizCultivos, String cultivo) {
+        // Dimensiones de la matriz
+        int filas = matrizCultivos.length;
+        int columnas = matrizCultivos[0].length;
+
+        // Límites iniciales del área especificada
+        int minX = arribaIzq.getX();
+        int maxX = abajoDerecha.getX();
+        int minY = arribaIzq.getY();
+        int maxY = abajoDerecha.getY();
+
+        // Cola para realizar la búsqueda en anchura (BFS)
+        Queue<Coordenada> cola = new LinkedList<>();
+
+        // Matriz de visitados para evitar procesar la misma celda más de una vez
+        boolean[][] visitados = new boolean[filas][columnas];
+
+        // Agregar todas las celdas del área inicial a la cola y marcarlas como visitadas
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                cola.add(new Coordenada(x, y));
+                visitados[x][y] = true;
+            }
+        }
+
+        // Direcciones para moverse: arriba, abajo, izquierda, derecha
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+
+        // Realizar BFS
+        while (!cola.isEmpty()) {
+            Coordenada actual = cola.poll();
+            int x = actual.getX();
+            int y = actual.getY();
+
+            // Explora las celdas adyacentes
+            for (int i = 0; i < 4; i++) {
+                int nuevoX = x + dx[i];
+                int nuevoY = y + dy[i];
+
+                // Verificar si la celda está dentro de los límites de la matriz
+                if (nuevoX >= 0 && nuevoX < filas && nuevoY >= 0 && nuevoY < columnas) {
+                    // Verificar si no ha sido visitada y tiene el mismo cultivo
+                    if (!visitados[nuevoX][nuevoY] && matrizCultivos[nuevoX][nuevoY].equals(cultivo)) {
+                        // Marcar como visitada y agregarla a la cola
+                        visitados[nuevoX][nuevoY] = true;
+                        cola.add(new Coordenada(nuevoX, nuevoY));
+
+                        // Expandir los límites del área efectiva
+                        minX = Math.min(minX, nuevoX);
+                        maxX = Math.max(maxX, nuevoX);
+                        minY = Math.min(minY, nuevoY);
+                        maxY = Math.max(maxY, nuevoY);
+                    }
+                }
+            }
+        }
+
+        // Calcular ancho (N) y alto (M) del área efectiva
+        int ancho = maxX - minX + 1;
+        int alto = maxY - minY + 1;
+
+        // Verificar la restricción N + M <= 11
+        return (ancho + alto) <= 11;
+    }
+
     public static boolean esAreaValida(Coordenada arribaIzq, Coordenada abajoDerecha, String[][] matrizCultivos, Cultivo cultivo) {
         // Verificar que el área principal esté libre
         if (!areaLibre(arribaIzq, abajoDerecha, matrizCultivos)) {
