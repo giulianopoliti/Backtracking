@@ -83,7 +83,7 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                         // Paso 3: Validación del área para evitar cultivos solapados
                         // Verificamos que la colocación no se salga del campo ni solape con otros cultivos
                         if (abajoDerecha.getX() < riesgos.length && abajoDerecha.getY() < riesgos[0].length) {
-                            if (Utils.esAreaValida(arribaIzq, abajoDerecha, matrizCultivos, cultivoActual)) {
+                            if (Utils.areaLibre(arribaIzq, abajoDerecha, matrizCultivos)) {
                                 System.out.println("Colocando cultivo en el área: " + arribaIzq + " a " + abajoDerecha);
 
                                 // Paso 4: Calcular la ganancia y agregar el cultivo

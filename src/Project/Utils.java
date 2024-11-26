@@ -105,65 +105,6 @@ public class Utils {
         return (ancho + alto) <= 11;
     }
 
-    public static boolean esAreaValida(Coordenada arribaIzq, Coordenada abajoDerecha, String[][] matrizCultivos, Cultivo cultivo) {
-        // Verificar que el área principal esté libre
-        if (!areaLibre(arribaIzq, abajoDerecha, matrizCultivos)) {
-            return false;
-        }
-
-        int maxFila = matrizCultivos.length;
-        int maxColumna = matrizCultivos[0].length;
-        int maxFilaContinuo = 0;
-        int maxColumnaContinuo = 0;
-
-        // Verificar filas continuas en los límites
-        for (int i = Math.max(0, arribaIzq.getX() - 11); i <= Math.min(maxFila - 1, abajoDerecha.getX() + 11); i++) {
-            int contadorFila = 0;
-            for (int j = Math.max(0, arribaIzq.getY() - 11); j <= Math.min(maxColumna - 1, abajoDerecha.getY() + 11); j++) {
-                // Salteamos las posiciones del área
-                if (i >= arribaIzq.getX() && i <= abajoDerecha.getX() && j >= arribaIzq.getY() && j <= abajoDerecha.getY()) {
-                    continue;
-                }
-                // Validamos índices antes de acceder a la matriz
-                if (i >= 0 && i < maxFila && j >= 0 && j < maxColumna) {
-                    if (matrizCultivos[i][j] != null && matrizCultivos[i][j].equals(cultivo.getNombre())) {
-                        contadorFila++;
-                        maxFilaContinuo = Math.max(maxFilaContinuo, contadorFila);
-                    } else {
-                        contadorFila = 0;
-                    }
-                }
-            }
-        }
-
-        // Verificar columnas continuas en los límites
-        for (int j = Math.max(0, arribaIzq.getY() - 11); j <= Math.min(maxColumna - 1, abajoDerecha.getY() + 11); j++) {
-            int contadorColumna = 0;
-            for (int i = Math.max(0, arribaIzq.getX() - 11); i <= Math.min(maxFila - 1, abajoDerecha.getX() + 11); i++) {
-                // Salteamos las posiciones del área
-                if (i >= arribaIzq.getX() && i <= abajoDerecha.getX() && j >= arribaIzq.getY() && j <= abajoDerecha.getY()) {
-                    continue;
-                }
-                // Validamos índices antes de acceder a la matriz
-                if (i >= 0 && i < maxFila && j >= 0 && j < maxColumna) {
-                    if (matrizCultivos[i][j] != null && matrizCultivos[i][j].equals(cultivo.getNombre())) {
-                        contadorColumna++;
-                        maxColumnaContinuo = Math.max(maxColumnaContinuo, contadorColumna);
-                    } else {
-                        contadorColumna = 0;
-                    }
-                }
-            }
-        }
-
-        // Verificar que la suma de las dimensiones continuas no exceda 11
-        return (maxFilaContinuo + maxColumnaContinuo) <= 11;
-    }
-
-
-
-
-
     public static void marcarMatrizCultivos(Cultivo cultivo, Coordenada arribaIzq, Coordenada abajoDerecha, String[][] cultivos) {
         for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
             for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
@@ -171,7 +112,6 @@ public class Utils {
             }
         }
     }
-
 
 
     public static void desmarcarMatrizCultivos (Coordenada arribaIzq, Coordenada abajoDerecha, String[][] cultivos) {
