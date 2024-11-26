@@ -27,30 +27,6 @@ public class Utils {
     }
 
 
-    //CHEQUEARRRRRR
-    public static boolean convienePlantarlo(Cultivo cultivo, double gananciaActual, double[][] riesgos, Coordenada izqArriba, Coordenada derechaAbajo) {
-        double ganancia = 0;
-
-        for (int i = izqArriba.getX(); i <= derechaAbajo.getX(); i++) {
-            for (int j = izqArriba.getY(); j <= derechaAbajo.getY(); j++) {
-                // Suma el potencial de cada parcela en el área
-                double potencial = obtenerPotencialDeCadaParcela(riesgos[i][j], cultivo.getCostoPorParcela(), cultivo.getPrecioDeVentaPorParcela());
-                ganancia += potencial;
-            }
-        }
-
-        // Resta el costo de inversión única del cultivo
-        ganancia -= cultivo.getInversionRequerida();
-
-        // Retorna true si la ganancia es mejor que la ganancia actual
-        return ganancia > gananciaActual;
-    }
-
-    public static boolean isInSet(Cultivo cultivo, Set<Cultivo> cultivoSet, Cultivo cultivoRepetible) {
-        return !cultivoSet.contains(cultivo) && !cultivo.equals(cultivoRepetible);
-    }
-
-
     public static boolean areaLibre(Coordenada arribaIzq, Coordenada abajoDerecha, String[][] cultivos) {
         for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
             for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
@@ -106,7 +82,7 @@ public class Utils {
                 // Verificar si la celda está dentro de los límites de la matriz
                 if (nuevoX >= 0 && nuevoX < filas && nuevoY >= 0 && nuevoY < columnas) {
                     // Verificar si no ha sido visitada y tiene el mismo cultivo
-                    if (!visitados[nuevoX][nuevoY] && matrizCultivos[nuevoX][nuevoY].equals(cultivo)) {
+                    if (!visitados[nuevoX][nuevoY] && matrizCultivos[nuevoX][nuevoY] != null && matrizCultivos[nuevoX][nuevoY].equals(cultivo)) {
                         // Marcar como visitada y agregarla a la cola
                         visitados[nuevoX][nuevoY] = true;
                         cola.add(new Coordenada(nuevoX, nuevoY));
@@ -198,7 +174,6 @@ public class Utils {
 
 
 
-
     public static void desmarcarMatrizCultivos (Coordenada arribaIzq, Coordenada abajoDerecha, String[][] cultivos) {
         for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
             for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
@@ -222,45 +197,6 @@ public class Utils {
 
         // Resta el costo de inversión única del cultivo
         return ganancia - cultivo.getInversionRequerida();
-    }
-
-    public static Coordenada encontrarAreaRectangular(Cultivo[][] matrizCultivos, boolean[][] visitado, int startI, int startJ) {
-        Cultivo cultivoActual = matrizCultivos[startI][startJ];
-        int maxI = startI;
-        int maxJ = startJ;
-
-        // Encontrar el límite inferior derecho del rectángulo
-        while (maxI + 1 < matrizCultivos.length &&
-                !visitado[maxI + 1][startJ] &&
-                matrizCultivos[maxI + 1][startJ] == cultivoActual) {
-            maxI++;
-        }
-
-        while (maxJ + 1 < matrizCultivos[0].length &&
-                !visitado[startI][maxJ + 1] &&
-                matrizCultivos[startI][maxJ + 1] == cultivoActual) {
-            maxJ++;
-        }
-
-        // Verificar que toda el área rectangular contiene el mismo cultivo
-        for (int i = startI; i <= maxI; i++) {
-            for (int j = startJ; j <= maxJ; j++) {
-                if (matrizCultivos[i][j] != cultivoActual) {
-                    // Si encontramos un cultivo diferente, ajustamos los límites
-                    return new Coordenada(i - 1, j - 1);
-                }
-            }
-        }
-
-        return new Coordenada(maxI, maxJ);
-    }
-
-    public static void marcarAreaComoVisitada(boolean[][] visitado, Coordenada arribaIzq, Coordenada abajoDerecha) {
-        for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
-            for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
-                visitado[i][j] = true;
-            }
-        }
     }
 
     //chequear

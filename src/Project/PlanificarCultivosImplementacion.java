@@ -136,8 +136,8 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             }
             double gananciaParametro = 0;
             return backtrackingRepetidos(
-                    cultivosDisponibles, new ArrayList<>(), riesgos,
-                    gananciaParcial, gananciaParametro, indiceCultivo, matrizCultivos
+                    cultivosDisponibles, cultivoSeleccionados, riesgos,
+                    gananciaParcial, gananciaParametro, 0, matrizCultivos
             );
         }
 

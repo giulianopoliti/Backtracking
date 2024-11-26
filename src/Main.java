@@ -33,7 +33,7 @@ public class Main {
         cultivo.setCostoPorParcela(97);
         cultivo.setInversionRequerida(1500);
         cultivo.setPrecioDeVentaPorParcela(475);
-        cultivo.setTemporadaOptima("Otoño");
+        cultivo.setTemporadaOptima("Otoo");
         cultivos.add(cultivo);
 
         cultivo = new Cultivo();
@@ -73,14 +73,14 @@ public class Main {
         cultivo.setCostoPorParcela(115.0);
         cultivo.setInversionRequerida(1800);
         cultivo.setPrecioDeVentaPorParcela(510);
-        cultivo.setTemporadaOptima("Otoño");
+        cultivo.setTemporadaOptima("Otño");
         cultivos.add(cultivo);
 
 
-        double[][] riesgos = new double[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                riesgos[i][j] = (i + j) / 20.0;
+        double[][] riesgos = new double[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                riesgos[i][j] = (i + j) / 16.0;
             }
         }
         List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Otoño");
