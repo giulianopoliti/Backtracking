@@ -64,7 +64,7 @@ public class Utils {
             }
         }
 
-        // Direcciones para moverse: arriba, abajo, izquierda, derecha
+        // Direcciones para moverse: arriba (-1,0), abajo(1,0), izquierda(0,-1), derecha(0, 1)
         int[] dx = {-1, 1, 0, 0};
         int[] dy = {0, 0, -1, 1};
 
@@ -74,7 +74,7 @@ public class Utils {
             int x = actual.getX();
             int y = actual.getY();
 
-            // Explora las celdas adyacentes
+            // Explora las celdas adyacentes (arriba, abajo, izquierda, derecha)
             for (int i = 0; i < 4; i++) {
                 int nuevoX = x + dx[i];
                 int nuevoY = y + dy[i];
