@@ -224,41 +224,6 @@ public class Utils {
         return ganancia - cultivo.getInversionRequerida();
     }
 
-    /*private void guardarMejorConfiguracion(double [][] riesgos,Cultivo[][] matrizCultivos, List<CultivoSeleccionado> cultivoSeleccionados) {
-        cultivoSeleccionados.clear();
-        boolean[][] visitado = new boolean[matrizCultivos.length][matrizCultivos[0].length];
-
-        // Recorrer la matriz buscando cultivos no visitados
-        for (int i = 0; i < matrizCultivos.length; i++) {
-            for (int j = 0; j < matrizCultivos[0].length; j++) {
-                if (!visitado[i][j] && matrizCultivos[i][j] != null) {
-                    // Encontrar el área rectangular del cultivo actual
-                    Coordenada arribaIzq = new Coordenada(i, j);
-                    Coordenada abajoDerecha = encontrarAreaRectangular(matrizCultivos, visitado, i, j);
-
-                    // Marcar toda el área como visitada
-                    marcarAreaComoVisitada(visitado, arribaIzq, abajoDerecha);
-
-                    // Calcular estadísticas del área
-                    double montoInvertido = calcularMontoInvertido(matrizCultivos[i][j], arribaIzq, abajoDerecha);
-                    double riesgoPromedio = calcularRiesgoPromedio(arribaIzq, abajoDerecha, riesgos);
-                    double gananciaArea = calcularGananciaArea(matrizCultivos[i][j], arribaIzq, abajoDerecha, riesgos);
-
-                    // Crear y agregar el CultivoSeleccionado
-                    CultivoSeleccionado cultivoSeleccionado = new CultivoSeleccionado(
-                            matrizCultivos[i][j].getNombre(),
-                            arribaIzq,
-                            abajoDerecha,
-                            montoInvertido,
-                            (int)riesgoPromedio,
-                            gananciaArea
-                    );
-                    cultivoSeleccionados.add(cultivoSeleccionado);
-                }
-            }
-        }
-    }*/
-
     public static Coordenada encontrarAreaRectangular(Cultivo[][] matrizCultivos, boolean[][] visitado, int startI, int startJ) {
         Cultivo cultivoActual = matrizCultivos[startI][startJ];
         int maxI = startI;
