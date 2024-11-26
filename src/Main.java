@@ -33,7 +33,7 @@ public class Main {
         cultivo.setCostoPorParcela(97);
         cultivo.setInversionRequerida(1500);
         cultivo.setPrecioDeVentaPorParcela(475);
-        cultivo.setTemporadaOptima("Otoo");
+        cultivo.setTemporadaOptima("Otoño");
         cultivos.add(cultivo);
 
         cultivo = new Cultivo();
@@ -73,18 +73,31 @@ public class Main {
         cultivo.setCostoPorParcela(115.0);
         cultivo.setInversionRequerida(1800);
         cultivo.setPrecioDeVentaPorParcela(510);
-        cultivo.setTemporadaOptima("Otño");
+        cultivo.setTemporadaOptima("Oño");
         cultivos.add(cultivo);
 
 
-        double[][] riesgos = new double[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                riesgos[i][j] = (i + j) / 16.0;
+        double[][] riesgos = new double[6][6];
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                riesgos[i][j] = (i + j) / 12.0;
             }
         }
-        List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Otoño");
-        imprimirResultado(cultivoSeleccionados);
+        int iterations = 20;
+        long tiempoTotal = 0;
+
+        for (int i = 0; i < iterations; i++) {
+            System.out.println("calculando....");
+            long inicio = System.nanoTime();
+            List<CultivoSeleccionado> cultivoSeleccionados = planificador.obtenerPlanificacion(cultivos, riesgos, "Otoño");
+            long fin = System.nanoTime();
+            imprimirResultado(cultivoSeleccionados);
+            tiempoTotal += (fin - inicio);
+            System.out.println(tiempoTotal);
+        }
+
+        double tiempoPromedio = tiempoTotal / (double) iterations / 1_000_000_000; //lo calcula en segundos
+        System.out.println("Tiempo promedio: " + tiempoPromedio + " segundos");
      }
 
     private static void imprimirMatrizDeRiesgos(double[][] riesgos) {
