@@ -9,24 +9,6 @@ import java.util.Set;
 
 public class Utils {
 
-    // recorre el area y planta el cultivo
-    public static void plantarCultivoEnArea(Cultivo cultivo, Coordenada arribaIzq, Coordenada abajoDerecha, Cultivo[][] matrizCultivos) {
-        for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
-            for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
-                matrizCultivos[i][j] = cultivo;
-            }
-        }
-    }
-    //recorre el area y remueve el cultivo de la matriz [][] de cultivos de prueba
-    public static void removerCultivoDeArea(Coordenada arribaIzq, Coordenada abajoDerecha, Cultivo[][] matrizCultivos) {
-        for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
-            for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
-                matrizCultivos[i][j] = null;
-            }
-        }
-    }
-
-
     public static boolean areaLibre(Coordenada arribaIzq, Coordenada abajoDerecha, String[][] cultivos) {
         for (int i = arribaIzq.getX(); i <= abajoDerecha.getX(); i++) {
             for (int j = arribaIzq.getY(); j <= abajoDerecha.getY(); j++) {
