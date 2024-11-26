@@ -25,13 +25,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         Set <Cultivo> cultivoSet = new HashSet<>();
 
         List<CultivoSeleccionado> resultado = backtracking(cultivosDisponibles, cultivoSeleccionados, riesgos,gananciaParcial ,mejorGananciaGlobal, 0, matrizCultivos);
-        System.out.println(resultado);
-        for (int i = 0; i < matrizCultivos.length; i++) {
-            for (int j = 0; j < matrizCultivos[i].length; j++) {
-                System.out.print(matrizCultivos[i][j] + " ");
-            }
-            System.out.println();
-        }
         return cultivoSeleccionados;
     }
 
@@ -49,7 +42,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         if (indiceCultivo >= cultivosDisponibles.size()) {
             if (gananciaParcial > mejorGanancia) {
                 mejorGanancia = gananciaParcial;  // Actualizar mejor ganancia
-                System.out.println("Mejor ganancia actualizada a: " + mejorGanancia);
                 return new ArrayList<>(cultivoSeleccionados); // Guardar la configuración
             }
             double gananciaParametro = 0;
@@ -59,10 +51,7 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             );
         }
 
-
         Cultivo cultivoActual = cultivosDisponibles.get(indiceCultivo);
-        System.out.println("\nExplorando cultivo: " + cultivoActual.getNombre());
-
 
         List<CultivoSeleccionado> mejorSeleccion = new ArrayList<>(cultivoSeleccionados); // Copia la configuración actual
 
@@ -81,13 +70,11 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                         // Verificamos que la colocación no se salga del campo ni solape con otros cultivos
                         if (abajoDerecha.getX() < riesgos.length && abajoDerecha.getY() < riesgos[0].length) {
                             if (Utils.areaLibre(arribaIzq, abajoDerecha, matrizCultivos)) {
-                                System.out.println("Colocando cultivo en el área: " + arribaIzq + " a " + abajoDerecha);
 
                                 //Calcular la ganancia y agregar el cultivo
                                 double montoInvertido = calcularMontoInvertido(cultivoActual, arribaIzq, abajoDerecha);
                                 double riesgoAsociado = RiesgoAsociado(arribaIzq, abajoDerecha, riesgos);
                                 double gananciaArea = calcularGananciaArea(cultivoActual, arribaIzq, abajoDerecha, riesgos);
-                                System.out.println("Monto invertido: " + montoInvertido + ", Riesgo asociado: " + riesgoAsociado + ", Ganancia de área: " + gananciaArea);
 
                                 CultivoSeleccionado cultivoSeleccionado = new CultivoSeleccionado(
                                         cultivoActual.getNombre(), arribaIzq, abajoDerecha,
@@ -103,7 +90,7 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
 
                                 // Llamada recursiva para explorar el siguiente cultivo
                                 double nuevaGanancia = gananciaParcial + gananciaArea;
-                                System.out.println("Ganancia parcial después de colocar el cultivo: " + nuevaGanancia);
+
                                 List<CultivoSeleccionado> resultadoRecursivo = backtracking(
                                         cultivosDisponibles, cultivoSeleccionados, riesgos,
                                         nuevaGanancia, mejorGanancia, indiceCultivo + 1,
@@ -114,13 +101,11 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                                 if (nuevaGanancia > mejorGanancia) {
                                     mejorGanancia = nuevaGanancia;
                                     mejorSeleccion = resultadoRecursivo;
-                                    System.out.println("Nueva mejor ganancia encontrada: " + mejorGanancia);
                                 }
 
                                 // desmarcar matriz y remover el cultivo
                                 Utils.desmarcarMatrizCultivos(arribaIzq, abajoDerecha, matrizCultivos);
                                 cultivoSeleccionados.remove(cultivoSeleccionado);
-                                System.out.println("Desmarcando el área ocupada y removiendo el cultivo.");
                             }
                         }
                     }
@@ -129,7 +114,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         }
 
         // Intentamos avanzar al siguiente cultivo sin colocar el actual
-        System.out.println("Intentando avanzar sin colocar el cultivo " + cultivoActual.getNombre());
         List<CultivoSeleccionado> resultadoSinColocar = backtracking(
                 cultivosDisponibles, cultivoSeleccionados, riesgos,
                 gananciaParcial, mejorGanancia, indiceCultivo + 1,
@@ -137,7 +121,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         );
 
         // Retornamos el mejor resultado encontrado entre colocar o no colocar el cultivo
-        System.out.println("Retornando el mejor resultado entre colocar y no colocar el cultivo " + cultivoActual.getNombre());
         return resultadoSinColocar.size() > mejorSeleccion.size() ? resultadoSinColocar : mejorSeleccion;
     }
 
@@ -157,7 +140,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         }
 
         Cultivo cultivoActual = cultivosDisponibles.get(indiceCultivo);
-        System.out.println("\nExplorando repetición de cultivo: " + cultivoActual.getNombre());
 
         List<CultivoSeleccionado> mejorSeleccion = new ArrayList<>(cultivoSeleccionados);
 
@@ -194,8 +176,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                                     Utils.marcarMatrizCultivos(cultivoActual, arribaIzq, abajoDerecha, matrizCultivos);
                                     cultivoSeleccionados.add(cultivoSeleccionado);
 
-                                    System.out.println("Cultivo repetido en el área: " + arribaIzq + " a " + abajoDerecha);
-                                    System.out.println("Ganancia actualizada: " + mejorGananciaAnterior);
 
                                     // Llamada recursiva
                                     List<CultivoSeleccionado> resultadoRecursivo = backtrackingRepetidos(
@@ -212,7 +192,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
                                     // Desmarcar la matriz y remover el cultivo para backtracking
                                     Utils.desmarcarMatrizCultivos(arribaIzq, abajoDerecha, matrizCultivos);
                                     cultivoSeleccionados.remove(cultivoSeleccionado);
-                                    System.out.println("Retrocediendo y desmarcando el área: " + arribaIzq + " a " + abajoDerecha);
                                 }
                             }
                         }
