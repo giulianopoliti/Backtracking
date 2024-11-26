@@ -26,12 +26,7 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
 
         List<CultivoSeleccionado> resultado = backtracking(cultivosDisponibles, cultivoSeleccionados, riesgos,gananciaParcial ,mejorGananciaGlobal, 0, matrizCultivos);
         System.out.println(resultado);
-        for (int i = 0; i < matrizCultivos.length; i++) {
-            for (int j = 0; j < matrizCultivos[i].length; j++) {
-                System.out.print(matrizCultivos[i][j] + " ");
-            }
-            System.out.println();
-        }
+
         return cultivoSeleccionados;
     }
 
@@ -44,17 +39,18 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
             int indiceCultivo, //nivel
             String[][] matrizCultivos) {
 
-
-        // Si llegamos al final, actualizamos la ganancia global si es necesario
+        List<CultivoSeleccionado> mejorSeleccion = new ArrayList<>(cultivoSeleccionados);
+// Si llegamos al final, actualizamos la ganancia global si es necesario
         if (indiceCultivo >= cultivosDisponibles.size()) {
             if (gananciaParcial > mejorGanancia) {
                 mejorGanancia = gananciaParcial;  // Actualizar mejor ganancia
                 System.out.println("Mejor ganancia actualizada a: " + mejorGanancia);
-                return new ArrayList<>(cultivoSeleccionados); // Guardar la configuración
+                mejorSeleccion = new ArrayList<>(cultivoSeleccionados);
             }
             double gananciaParametro = 0;
+            // Llamar a backtrackingRepetidos con la mejor selección inicial
             return backtrackingRepetidos(
-                    cultivosDisponibles, cultivoSeleccionados, riesgos,
+                    cultivosDisponibles, mejorSeleccion, riesgos,
                     gananciaParcial, gananciaParametro, 0, matrizCultivos
             );
         }
@@ -63,8 +59,6 @@ public class PlanificarCultivosImplementacion implements PlanificarCultivos {
         Cultivo cultivoActual = cultivosDisponibles.get(indiceCultivo);
         System.out.println("\nExplorando cultivo: " + cultivoActual.getNombre());
 
-
-        List<CultivoSeleccionado> mejorSeleccion = new ArrayList<>(cultivoSeleccionados); // Copia la configuración actual
 
         for (int i = 0; i < riesgos.length; i++) {
             for (int j = 0; j < riesgos[i].length; j++) {
